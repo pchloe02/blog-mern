@@ -1,0 +1,26 @@
+{
+  "name": "ecv_framework_js",
+  "version": "1.0.0",
+  "description": "Projet stack MERN",
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/server.js",
+    "dev" : "nodemon src/server.js"
+  },
+  "keywords": [
+    "MERN",
+    "mongoDB",
+    "nodeJS",
+    "Express"
+  ],
+    "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
