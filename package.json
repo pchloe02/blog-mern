@@ -9,7 +9,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node src/server.js",
-    "dev" : "nodemon src/server.js"
+    "dev": "nodemon src/server.js"
   },
   "keywords": [
     "MERN",
@@ -17,8 +17,10 @@
     "nodeJS",
     "Express"
   ],
-    "dependencies": {
-    "express": "^4.18.2"
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "express": "^4.18.2",
+    "mongoose": "^8.19.3"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
