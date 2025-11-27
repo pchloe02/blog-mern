@@ -1,17 +1,26 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import { connectDB } from './config/database.js';
+import articleRoutes from './routes/articles.js';
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.get('/', (req, res) => {res.json({
-    message: 'Welcome to the API', 
-    status: 'success', 
-    version: '1.0.0'});
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.get('/', (req, res) => {
+    res.json({
+        message: 'Bienvenue sur l\'API du Blog MERN !',
+        version: '1.0.0',
+        status: 'Le serveur fonctionne correctement',
+        endpoints: {
+            articles: '/api/articles'
+        }
+    });
 });
+app.use('/api/articles', articleRoutes);
 
 
 const startServer = async () => {
