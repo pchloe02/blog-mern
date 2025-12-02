@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import { connectDB } from './config/database.js';
 import articleRoutes from './routes/articles.js';
+import commentRoutes from './routes/comments.js';
 
 dotenv.config();
 
@@ -21,6 +22,7 @@ app.get('/', (req, res) => {
     });
 });
 app.use('/api/articles', articleRoutes);
+app.use('/api/comments', commentRoutes);
 
 
 const startServer = async () => {
