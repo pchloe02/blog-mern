@@ -91,4 +91,28 @@ const deleteComment = catchAsync(async (req, res, next) => {
     });
 });
 
-export { createComment, getAllComments, getCommentsByArticle, deleteComment }
+const updateComment = catchAsync(async (req, res, next) => {
+    const { id } = req.params;
+    const { content } = req.body;
+
+    if (content === undefined || (typeof content === 'string' && content.trim() === '')) {
+        return next(new AppError("Le contenu du commentaire est requis", 400));
+    }
+
+    const comment = await Comment.findByIdAndUpdate(
+        id,
+        { content },
+        { new: true, runValidators: true }
+    );
+
+    if (!comment) {
+        return next(new AppError('Commentaire non trouvé', 404));
+    }
+
+    res.status(200).json({
+        status: 'success',
+        data: { comment }
+    });
+});
+
+export { createComment, getAllComments, getCommentsByArticle, deleteComment, updateComment }
