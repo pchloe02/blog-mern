@@ -18,7 +18,7 @@ router.get('/:id', getArticleById);
 
 router.use(protect);
 router.post('/', createArticle);
-router.put('/:id', updateArticle);
+router.patch('/:id', updateArticle);
 router.delete('/:id', deleteArticle);
 router.patch('/:id/publish', publishArticle);
 
