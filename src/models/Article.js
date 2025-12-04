@@ -20,8 +20,7 @@ const articleSchema = new mongoose.Schema(
 
         // Auteur de l'article
         auteur: {
-            id: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-            name: { type: String, required: true }
+            type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true
         },
 
         // Statut de publication
