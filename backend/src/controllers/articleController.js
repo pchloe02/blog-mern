@@ -11,15 +11,14 @@ const createArticle = catchAsync(async (req, res, next) => {
         titre,
         contenu,
         auteur: req.user._id,
-
         categorie
     });
 
-    const articleSauvegarde = await article.save();
+    const articleSaved = await article.save();
     res.status(201).json({
         success: true,
-        message: 'Article créé avec succès',
-        data: articleSauvegarde
+        message: 'Article created successfully',
+        data: articleSaved
     });
 });
 
@@ -68,42 +67,52 @@ const getArticleById = catchAsync(async (req, res, next) => {
 
 const updateArticle = catchAsync(async (req, res, next) => {
     const { id } = req.params;
-
-    const article = await Article.findByIdAndUpdate(
-        id,
-        req.body,
-        {
-            new: true,              // Retourne le document modifié
-            runValidators: true     // Exécute les validations
-        }
-    );
-
+    const article = await Article.findById(id);
     if (!article) {
         return next(new AppError('Article non trouvé', 404));
     }
 
+    if (article.auteur.toString() !== req.user._id.toString()) {
+        return next(new AppError("You are not authorized to update this article", 403));
+    }
+
+    const allowedFields = ['titre', 'contenu', 'categorie'];
+    allowedFields.forEach(field => {
+        if (Object.prototype.hasOwnProperty.call(req.body, field)) {
+            article[field] = req.body[field];
+        }
+    });
+
+    const updated = await article.save();
+
     res.status(200).json({
         success: true,
-        message: 'Article mis à jour avec succès',
-        data: article
+        message: 'Article has been updated successfully',
+        data: updated
     });
 });
 
 const deleteArticle = catchAsync(async (req, res, next) => {
     const { id } = req.params;
-    const article = await Article.findByIdAndDelete(id);
+    const article = await Article.findById(id);
     if (!article) {
         return next(new AppError('Article non trouvé', 404));
     }
 
+    if (article.auteur.toString() !== req.user._id.toString()) {
+        return next(new AppError("You are not authorized to delete this article", 403));
+    }
+
+    await article.remove();
+
     res.status(200).json({
         success: true,
-        message: 'Article supprimé avec succès',
+        message: 'Article deleted successfully',
         data: article
     });
 });
 const getPublishedArticles = catchAsync(async (req, res, next) => {
-    const articles = await Article.findPublies();
+    const articles = await Article.findPublished();
 
     res.status(200).json({
         success: true,
@@ -122,11 +131,15 @@ const publishArticle = catchAsync(async (req, res, next) => {
         return next(new AppError('Article non trouvé', 404));
     }
 
-    await article.publier();
+    if (article.auteur.toString() !== req.user._id.toString()) {
+        return next(new AppError("You are not authorized to publish this article", 403));
+    }
+
+    await article.publish();
 
     res.status(200).json({
         success: true,
-        message: 'Article publié avec succès',
+        message: 'Article published successfully',
         data: article
     });
 });
