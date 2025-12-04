@@ -10,10 +10,8 @@ const createArticle = catchAsync(async (req, res, next) => {
     const article = new Article({
         titre,
         contenu,
-        auteur: {
-            id: req.user._id,
-            name: req.user.name
-        },
+        auteur: req.user._id,
+
         categorie
     });
 
@@ -34,7 +32,7 @@ const getAllArticles = catchAsync(async (req, res, next) => {
         .limitFields()
         .paginate();
 
-    const articles = await features.query;
+    const articles = await features.query.populate('auteur', 'name');
 
     const paginationInfo = features.getPaginationInfo(totalCount);
 
@@ -55,7 +53,7 @@ const getAllArticles = catchAsync(async (req, res, next) => {
 
 const getArticleById = catchAsync(async (req, res, next) => {
     const { id } = req.params;
-    const article = await Article.findById(id);
+    const article = await Article.findById(id).populate('auteur', 'name');
     if (!article) {
         return next(new AppError('Article non trouvé', 404));
     }
