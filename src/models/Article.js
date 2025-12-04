@@ -20,10 +20,8 @@ const articleSchema = new mongoose.Schema(
 
         // Auteur de l'article
         auteur: {
-            type: String,
-            required: [true, 'L\'auteur est obligatoire'],
-            trim: true,
-            maxlength: [100, 'Le nom de l\'auteur ne peut pas dépasser 100 caractères']
+            id: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+            name: { type: String, required: true }
         },
 
         // Statut de publication
@@ -52,14 +50,14 @@ const articleSchema = new mongoose.Schema(
     },
     {
         // Options du schéma
-        
+
         // timestamps ajoute automatiquement createdAt et updatedAt
         timestamps: true,
-        
+
         // Permet de contrôler le comportement de toJSON()
         toJSON: {
             virtuals: true,            // Inclut les champs virtuels
-            transform: function(doc, ret) {
+            transform: function (doc, ret) {
                 delete ret.__v;
                 return ret;
             }
@@ -68,33 +66,33 @@ const articleSchema = new mongoose.Schema(
 );
 
 
-articleSchema.methods.publier = function() {
+articleSchema.methods.publier = function () {
     this.publie = true;
     return this.save();
 };
 
 
-articleSchema.methods.depublier = function() {
+articleSchema.methods.depublier = function () {
     this.publie = false;
     return this.save();
 };
 
-articleSchema.methods.incrementerVues = function() {
+articleSchema.methods.incrementerVues = function () {
     this.vues += 1;
     return this.save();
 };
 
 
-articleSchema.statics.findPublies = function() {
+articleSchema.statics.findPublies = function () {
     return this.find({ publie: true }).sort({ createdAt: -1 });
 };
 
-articleSchema.statics.findByCategorie = function(categorie) {
+articleSchema.statics.findByCategorie = function (categorie) {
     return this.find({ categorie, publie: true }).sort({ createdAt: -1 });
 };
 
 
-articleSchema.virtual('resume').get(function() {
+articleSchema.virtual('resume').get(function () {
     if (this.contenu.length <= 150) {
         return this.contenu;
     }
@@ -102,20 +100,20 @@ articleSchema.virtual('resume').get(function() {
 });
 
 
-articleSchema.virtual('dureeIecture').get(function() {
+articleSchema.virtual('dureeIecture').get(function () {
     const mots = this.contenu.split(' ').length;
     const minutes = Math.ceil(mots / 200);
     return minutes;
 });
 
-articleSchema.pre('save', function(next) {
+articleSchema.pre('save', function (next) {
     console.log(`💾 Sauvegarde de l'article : ${this.titre}`);
-    
-next();
+
+    next();
 });
 
 
-articleSchema.post('save', function(doc) {
+articleSchema.post('save', function (doc) {
     console.log(`✅ Article sauvegardé : ${doc._id}`);
 });
 

@@ -2,7 +2,7 @@ import express from 'express';
 const router = express.Router();
 
 import {
-        createArticle,
+    createArticle,
     getAllArticles,
     getArticleById,
     updateArticle,
@@ -10,13 +10,15 @@ import {
     getPublishedArticles,
     publishArticle
 } from '../controllers/articleController.js';
+import { verifyToken } from '../middleware/auth.js';
 
-router.get('/publies', getPublishedArticles);
+router.get('/published', getPublishedArticles);
 router.get('/', getAllArticles);
-router.post('/', createArticle);
 router.get('/:id', getArticleById);
-router.put('/:id', updateArticle);
-router.delete('/:id', deleteArticle);
-router.patch('/:id/publier', publishArticle);
+
+router.post('/', verifyToken, createArticle);
+router.put('/:id', verifyToken, updateArticle);
+router.delete('/:id', verifyToken, deleteArticle);
+router.patch('/:id/publish', verifyToken, publishArticle);
 
 export default router;
