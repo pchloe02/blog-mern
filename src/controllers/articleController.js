@@ -6,16 +6,19 @@ import { catchAsync } from '../middleware/errorHandler.js';
 
 
 const createArticle = catchAsync(async (req, res, next) => {
-const { titre, contenu, auteur, categorie } = req.body;
-const article = new Article({
+    const { titre, contenu, categorie } = req.body;
+    const article = new Article({
         titre,
         contenu,
-        auteur,
+        auteur: {
+            id: req.user._id,
+            name: req.user.name
+        },
         categorie
     });
 
-const articleSauvegarde = await article.save();
-res.status(201).json({
+    const articleSauvegarde = await article.save();
+    res.status(201).json({
         success: true,
         message: 'Article créé avec succès',
         data: articleSauvegarde
@@ -23,26 +26,26 @@ res.status(201).json({
 });
 
 const getAllArticles = catchAsync(async (req, res, next) => {
-const totalCount = await Article.countDocuments();
-const features = new QueryFeatures(Article.find(), req.query)
-        .filter()     
-        .search()       
-        .sort()         
+    const totalCount = await Article.countDocuments();
+    const features = new QueryFeatures(Article.find(), req.query)
+        .filter()
+        .search()
+        .sort()
         .limitFields()
-        .paginate();   
+        .paginate();
 
-const articles = await features.query;
+    const articles = await features.query;
 
-const paginationInfo = features.getPaginationInfo(totalCount);
+    const paginationInfo = features.getPaginationInfo(totalCount);
 
-const response = {
+    const response = {
         success: true,
         count: articles.length,
         totalCount: totalCount,
         data: articles
     };
 
-if (paginationInfo) {
+    if (paginationInfo) {
         response.pagination = paginationInfo;
     }
 
@@ -51,13 +54,13 @@ if (paginationInfo) {
 
 
 const getArticleById = catchAsync(async (req, res, next) => {
-const { id } = req.params;
-const article = await Article.findById(id);
-if (!article) {
+    const { id } = req.params;
+    const article = await Article.findById(id);
+    if (!article) {
         return next(new AppError('Article non trouvé', 404));
     }
 
-await article.incrementerVues();
+    await article.incrementerVues();
 
     res.status(200).json({
         success: true,
@@ -66,7 +69,7 @@ await article.incrementerVues();
 });
 
 const updateArticle = catchAsync(async (req, res, next) => {
-const { id } = req.params;
+    const { id } = req.params;
 
     const article = await Article.findByIdAndUpdate(
         id,
