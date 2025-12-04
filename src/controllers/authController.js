@@ -16,7 +16,8 @@ const register = catchAsync(async (req, res, next) => {
     }
 
     const hashed = await bcrypt.hash(password, 12);
-    const user = await User.create({ name, email, password: hashed });
+    const user = await User.create({ name, email, password });
+    user.password = undefined;
     const token = signToken(user._id, user.tokenVersion);
     res.status(201).json({ status: 'success', token, data: { user } });
 });
