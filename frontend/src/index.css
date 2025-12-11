@@ -1,0 +1,44 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Lora:ital,wght@0,400;0,600;1,400&family=Playfair+Display:wght@700&display=swap");
+:root {
+  --font-primary: "Lora", serif;
+  --font-title: "Playfair Display", serif;
+  --font-subtitle: "Lato", sans-serif;
+
+  --weight-regular: 400;
+  --weight-bold: 700;
+
+  --color-bg: #fafaf9;
+  --color-text: #3d1f1f;
+  --color-accent: #8b5a3e;
+  --color-border: #e6ded9;
+
+  font-family: var(--font-primary);
+  line-height: 1.5;
+  font-weight: var(--weight-regular);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--color-bg);
+}
+
+h1 {
+  font-family: var(--font-title);
+  font-weight: var(--weight-bold);
+}
+
+h2,
+h3,
+h4 {
+  font-family: var(--font-subtitle);
+  font-weight: var(--weight-regular);
+}
+
+body {
+  color: var(--color-text);
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
