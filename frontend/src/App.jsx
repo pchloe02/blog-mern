@@ -1,11 +1,17 @@
+import { Routes, Route, Navigate } from "react-router-dom";
+
 import "./App.css";
+import { About, Recipes, Home } from "./pages";
 
 const App = () => {
   return (
-    <>
-      <h1>Welcome to the MERN blog !</h1>
-      <p>All the repices you need are here :) </p>
-    </>
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/home" element={<Home />} />
+      <Route path="/about" element={<About />} />
+      <Route path="/recipes" element={<Recipes />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
   );
 };
 
